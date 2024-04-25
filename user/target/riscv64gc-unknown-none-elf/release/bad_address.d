@@ -1,0 +1,1 @@
+/home/oslab/rCore-T/user/target/riscv64gc-unknown-none-elf/release/bad_address: /home/oslab/rCore-T/user/src/bin/bad_address.rs /home/oslab/rCore-T/user/src/console.rs /home/oslab/rCore-T/user/src/lang_items.rs /home/oslab/rCore-T/user/src/lib.rs /home/oslab/rCore-T/user/src/syscall.rs

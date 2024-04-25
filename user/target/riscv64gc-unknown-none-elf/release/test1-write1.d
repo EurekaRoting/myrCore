@@ -1,0 +1,1 @@
+/home/oslab/rCore-T/user/target/riscv64gc-unknown-none-elf/release/test1-write1: /home/oslab/rCore-T/user/src/bin/test1-write1.rs /home/oslab/rCore-T/user/src/console.rs /home/oslab/rCore-T/user/src/lang_items.rs /home/oslab/rCore-T/user/src/lib.rs /home/oslab/rCore-T/user/src/syscall.rs
