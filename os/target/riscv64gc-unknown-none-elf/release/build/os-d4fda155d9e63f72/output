@@ -1,4 +1,8 @@
 cargo:rerun-if-changed=../user/src/
 cargo:rerun-if-changed=../user/build/bin/
-app_0: test1-write1
-app_1: test1_write0
+app_0: bad_address
+app_1: bad_instruction
+app_2: bad_register
+app_3: exit
+app_4: hello_world
+app_5: power
