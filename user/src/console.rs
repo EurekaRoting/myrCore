@@ -2,13 +2,11 @@ use super::write;
 use core::fmt::{self, Write};
 
 struct Stdout;
-pub const STDIN: usize = 0;//from github
-pub const STDOUT: usize = 1;//from github
-// const STDOUT: usize = 1;
+
+pub const STDOUT: usize = 1;
 
 impl Write for Stdout {
     fn write_str(&mut self, s: &str) -> fmt::Result {
-        // write(usize,*const u8,usize);
         write(STDOUT, s.as_bytes());
         Ok(())
     }

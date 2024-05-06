@@ -1,25 +1,62 @@
-//! SBI call wrappers
+// //! SBI call wrappers
+
+// /// use sbi call to putchar in console (qemu uart handler)
+// pub fn console_putchar(c: usize) {
+//     #[allow(deprecated)]
+//     sbi_rt::legacy::console_putchar(c);
+// }
+
+// /// use sbi call to set timer
+// pub fn set_timer(timer: usize) {
+//     sbi_rt::set_timer(timer as _);
+// }
+
+// /// use sbi call to shutdown the kernel
+// pub fn shutdown(failure: bool) -> ! {
+//     use sbi_rt::{system_reset, NoReason, Shutdown, SystemFailure};
+//     if !failure {
+//         system_reset(Shutdown, NoReason);
+//     } else {
+//         system_reset(Shutdown, SystemFailure);
+//     }
+//     unreachable!()
+// }
+use core::arch::asm;
+
+const SBI_SET_TIMER: usize = 0;
+const SBI_CONSOLE_PUTCHAR: usize = 1;
+
+///  handle SBI call with `which` SBI_id and other arguments
+#[inline(always)]
+fn sbi_call(which: usize, arg0: usize, arg1: usize, arg2: usize) -> usize {
+    let mut ret;
+    unsafe {
+        asm!(
+            "li x16, 0",
+            "ecall",
+            inlateout("x10") arg0 => ret,
+            in("x11") arg1,
+            in("x12") arg2,
+            in("x17") which,
+        );
+    }
+    ret
+}
 
 /// use sbi call to putchar in console (qemu uart handler)
 pub fn console_putchar(c: usize) {
-    #[allow(deprecated)]
-    sbi_rt::legacy::console_putchar(c);
+    sbi_call(SBI_CONSOLE_PUTCHAR, c, 0, 0);
 }
 
-/// use sbi call to getchar from console (qemu uart handler)
-#[allow(unused)]
-pub fn console_getchar() -> usize {
-    #[allow(deprecated)]
-    sbi_rt::legacy::console_getchar()
-}
-
+#[cfg(feature = "board_qemu")]
+use crate::board::QEMUExit;
 /// use sbi call to shutdown the kernel
-pub fn shutdown(failure: bool) -> ! {
-    use sbi_rt::{system_reset, NoReason, Shutdown, SystemFailure};
-    if !failure {
-        system_reset(Shutdown, NoReason);
-    } else {
-        system_reset(Shutdown, SystemFailure);
-    }
-    unreachable!()
+pub fn shutdown() -> ! {
+    #[cfg(feature = "board_qemu")]
+    crate::board::QEMU_EXIT_HANDLE.exit_failure();
+}
+
+/// use sbi call to set timer
+pub fn set_timer(timer: usize) {
+    sbi_call(SBI_SET_TIMER, timer, 0, 0);
 }
